@@ -15,9 +15,43 @@ import pandas
 import datetime
 
 dir_string = "/global/cscratch1/sd/hongcheq/LLNL/WRF_simulations_Feng_Zhe/LGdm.STD2011/"
-wrflist = [Dataset(dir_string+"wrfout_d01_2011-06-22_01:00:00"),
-           Dataset(dir_string+"wrfout_d01_2011-06-22_02:00:00"),
-           Dataset(dir_string+"wrfout_d01_2011-06-22_03:00:00")]
+
+month_str = ['05','06','07','08']
+#month_str = ['05']
+
+day_str = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14',\
+           '15','16','17','18','19','20','21','22','23','24','25','26','27','28',\
+           '29','30','31']
+hour_str = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13',\
+            '14','15','16','17','18','19','20','21','22','23']
+
+name_str = [''] * 2922
+#for i in range(0,18):
+#    name_str[i] = "wrfout_d01_2011-05-01_"+hour_str[i+6]+":00:00"
+
+# Note the wrfout put does not have 08-31 outputs
+icount = 0
+for i_month in range(len(month_str)):
+    if i_month == 0 or i_month == 2 : # May, Jul;
+        for i_day in range(len(day_str)):
+            if (i_month == 0 and i_day == 0): # 05-01
+                for i_hour in range(0,18):
+                    name_str[icount] = dir_string+"wrfout_d01_2011-"+month_str[i_month]+"-"+day_str[i_day]+"_"+hour_str[i_hour+6]+":00:00"
+                    icount = icount + 1
+            else:
+                for i_hour in range(len(hour_str)):
+                    # print(icount)
+                    name_str[icount] = dir_string+"wrfout_d01_2011-"+month_str[i_month]+"-"+day_str[i_day]+"_"+hour_str[i_hour]+":00:00"
+                    icount = icount + 1
+    else: # June, only has 30 days; Aug: the wrfout puts does not have 08-31 outputs
+        for i_day in range(len(day_str)-1):
+            for i_hour in range(len(hour_str)):
+                    name_str[icount] = dir_string+"wrfout_d01_2011-"+month_str[i_month]+"-"+day_str[i_day]+"_"+hour_str[i_hour]+":00:00"
+                    icount = icount + 1
+
+wrflist = [Dataset(name_str[i]) for i in range(len(name_str))]
+
+print(wrflist)
 
 #wrf_times = times.get_times(wrflist, timeidx=ALL_TIMES, method='cat')
 
