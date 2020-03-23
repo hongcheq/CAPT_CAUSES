@@ -18,7 +18,6 @@ import ESMF
 # This call enables debug logging
 # esmpy = ESMF.Manager(debug=True)
 print ("Hello ESMPy World from PET (processor) {0}!".format(ESMF.local_pet()))
-exit()
 
 dir_string = "/global/cscratch1/sd/hongcheq/LLNL/WRF_simulations_Feng_Zhe/LGdm.STD2011/"
 
@@ -121,7 +120,10 @@ print(rain_tot_tend_daily)
 
 ### regridding to a common 1x1 grid ###
 obs_dir = "/global/cscratch1/sd/hongcheq/LLNL/WRF_simulations_Feng_Zhe/CAUSES/obs/"
-
+# http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_8_0_0/esmpy_doc/html/examples.html
+# Note that this ESMF python interface is less well documented comparing to NCL
+# ESMF regridding https://www.ncl.ucar.edu/Applications/ESMF.shtml.
+# Just use NCL for the first-stage preprocessing for now.
 
 
 
