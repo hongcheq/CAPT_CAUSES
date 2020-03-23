@@ -13,19 +13,31 @@ import matplotlib.pyplot as plt
 import cartopy
 import pandas
 import datetime
+import ESMF
+
+# This call enables debug logging
+# esmpy = ESMF.Manager(debug=True)
+print ("Hello ESMPy World from PET (processor) {0}!".format(ESMF.local_pet()))
+exit()
 
 dir_string = "/global/cscratch1/sd/hongcheq/LLNL/WRF_simulations_Feng_Zhe/LGdm.STD2011/"
 
-month_str = ['05','06','07','08']
-#month_str = ['05']
+#month_str = ['05','06','07','08']
+month_str = ['05']
 
-day_str = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14',\
-           '15','16','17','18','19','20','21','22','23','24','25','26','27','28',\
-           '29','30','31']
+#name_str = [''] * 2922
+#name_str = [''] * 738
+name_str = [''] * (3*24-6)  # for faster testing
+
+day_str = ['01','02','03']
+
+#day_str = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14',\
+#           '15','16','17','18','19','20','21','22','23','24','25','26','27','28',\
+#           '29','30','31']
 hour_str = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13',\
             '14','15','16','17','18','19','20','21','22','23']
 
-name_str = [''] * 2922
+
 #for i in range(0,18):
 #    name_str[i] = "wrfout_d01_2011-05-01_"+hour_str[i+6]+":00:00"
 
@@ -90,17 +102,25 @@ print(rain_tot_tend.shape)
 tend_int = 1
 rain_tot_tend[tend_int:ntimes:tend_int,:,:] = RAIN_tot[tend_int:ntimes:tend_int,:,:]\
                                         - RAIN_tot[0:ntimes-tend_int+1:tend_int,:,:]
-rain_tot_tend.attrs["units"] = "mm/day"
+rain_tot_tend.attrs["units"] = "mm/hr"
 
 print(rain_tot_tend)
 
 #### calculate daily values from hourly values ####
+T2_daily = T2.resample(Time='D').mean(dim='Time')
+HFX_daily = HFX.resample(Time='D').mean(dim='Time')
+LH_daily = LH.resample(Time='D').mean(dim='Time')
+rain_tot_tend_daily = rain_tot_tend.resample(Time='D').mean(dim='Time')
+rain_tot_tend_daily = rain_tot_tend_daily * 24.0 # from mm/hr to mm/day
+rain_tot_tend_daily.attrs["units"] = "mm/day"
 
+print(T2_daily)
+print(HFX_daily)
+print(LH_daily)
+print(rain_tot_tend_daily)
 
-
-
-
-
+### regridding to a common 1x1 grid ###
+obs_dir = "/global/cscratch1/sd/hongcheq/LLNL/WRF_simulations_Feng_Zhe/CAUSES/obs/"
 
 
 

@@ -50,7 +50,7 @@ rain_tot_tend@description = "Total Precipitation Tendency"
   tend_int = 24
   rain_tot_tend(tend_int:ntimes-1:tend_int,:,:) = RAIN_tot(tend_int:ntimes-1:tend_int,:,:) - RAIN_tot(0:ntimes-tend_int:tend_int,:,:)
 
-  rain_tot_tend@units = "mm/day"
+  rain_tot_tend@units = "mm/day"   ; actually it is mm/hour, but the calculate_daily_values(rain_tot_tend, "sum", nDim, False) will make it mm/day
 
 printVarSummary(T2)
 printVarSummary(RAINNC)
